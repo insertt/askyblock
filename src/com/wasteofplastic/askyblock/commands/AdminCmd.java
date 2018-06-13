@@ -17,6 +17,45 @@
 
 package com.wasteofplastic.askyblock.commands;
 
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
+import com.wasteofplastic.askyblock.ASLocale;
+import com.wasteofplastic.askyblock.ASkyBlock;
+import com.wasteofplastic.askyblock.CoopPlay;
+import com.wasteofplastic.askyblock.DeleteIslandChunk;
+import com.wasteofplastic.askyblock.FileLister;
+import com.wasteofplastic.askyblock.GridManager;
+import com.wasteofplastic.askyblock.Island;
+import com.wasteofplastic.askyblock.Island.SettingsFlag;
+import com.wasteofplastic.askyblock.PluginConfig;
+import com.wasteofplastic.askyblock.Settings;
+import com.wasteofplastic.askyblock.Settings.GameType;
+import com.wasteofplastic.askyblock.listeners.LavaCheck;
+import com.wasteofplastic.askyblock.panels.ControlPanel;
+import com.wasteofplastic.askyblock.panels.SetBiome;
+import com.wasteofplastic.askyblock.util.Util;
+import com.wasteofplastic.askyblock.util.VaultHelper;
+import com.wasteofplastic.askyblock.util.teleport.SafeTeleportBuilder;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.BlockIterator;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -38,46 +77,6 @@ import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.BlockIterator;
-
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.Multiset;
-import com.wasteofplastic.askyblock.ASLocale;
-import com.wasteofplastic.askyblock.ASkyBlock;
-import com.wasteofplastic.askyblock.CoopPlay;
-import com.wasteofplastic.askyblock.DeleteIslandChunk;
-import com.wasteofplastic.askyblock.FileLister;
-import com.wasteofplastic.askyblock.GridManager;
-import com.wasteofplastic.askyblock.Island;
-import com.wasteofplastic.askyblock.Island.SettingsFlag;
-import com.wasteofplastic.askyblock.PluginConfig;
-import com.wasteofplastic.askyblock.Settings;
-import com.wasteofplastic.askyblock.Settings.GameType;
-import com.wasteofplastic.askyblock.listeners.LavaCheck;
-import com.wasteofplastic.askyblock.panels.ControlPanel;
-import com.wasteofplastic.askyblock.panels.SetBiome;
-import com.wasteofplastic.askyblock.util.Util;
-import com.wasteofplastic.askyblock.util.VaultHelper;
-import com.wasteofplastic.askyblock.util.teleport.SafeTeleportBuilder;
 
 /**
  * This class handles admin commands
@@ -2499,8 +2498,8 @@ public class AdminCmd implements CommandExecutor, TabCompleter {
         Util.sendMessage(sender, ChatColor.WHITE + "UUID: " + playerUUID.toString());
         // Completed challenges
         Util.sendMessage(sender, ChatColor.WHITE + plugin.myLocale().challengesguiTitle + ":");
-        HashMap<String, Boolean> challenges = plugin.getPlayers().getChallengeStatus(playerUUID);
-        HashMap<String, Integer> challengeTimes = plugin.getPlayers().getChallengeTimes(playerUUID);
+        Map<String, Boolean> challenges = plugin.getPlayers().getChallengeStatus(playerUUID);
+        Map<String, Integer> challengeTimes = plugin.getPlayers().getChallengeTimes(playerUUID);
         for (String c : challenges.keySet()) {
             if (challengeTimes.containsKey(c)) {
                 Util.sendMessage(sender, c + ": "

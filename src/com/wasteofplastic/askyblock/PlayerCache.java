@@ -373,7 +373,7 @@ public class PlayerCache {
      * @param playerUUID - the player's UUID
      * @return Hashmap of challenges as key, boolean as state
      */
-    public HashMap<String, Boolean> getChallengeStatus(UUID playerUUID) {
+    public Map<String, Boolean> getChallengeStatus(UUID playerUUID) {
         addPlayer(playerUUID);
         return playerCache.get(playerUUID).getChallengeStatus();
     }
@@ -384,7 +384,7 @@ public class PlayerCache {
      * @param playerUUID - the player's UUID
      * @return map of completion times
      */
-    public HashMap<String, Integer> getChallengeTimes(UUID playerUUID) {
+    public Map<String, Integer> getChallengeTimes(UUID playerUUID) {
         addPlayer(playerUUID);
         return playerCache.get(playerUUID).getChallengeCompleteTimes();
     }
